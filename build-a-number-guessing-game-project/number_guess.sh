@@ -60,11 +60,14 @@ GAME(){
       ((plays_count++))
       GAME
     else
-      echo You guessed it in $plays_count tries. The secret number was $GUESS_NUMBER. Nice job!
       ((plays_count++))
+      echo You guessed it in $plays_count tries. The secret number was $GUESS_NUMBER. Nice job!
+      INSERT_INTO_DB
     fi
-
   fi
+}
+INSERT_INTO_DB(){
+  PLAYER_INSERT=$($PSQL "INSERT INTO player(username, games_played, best_game) VALUES('$name', 1, $plays_count);")
 }
 plays_count=0
 MAIN

@@ -13,6 +13,8 @@ MAIN(){
   if [[ -z $PLAYER_DETAILS ]]
   then
     echo Welcome, $name! It looks like this is your first time here.
+    #PLAY $name
+    GAME $name 0
   else
       IFS='|'
       echo "$PLAYER_DETAILS" | while read USERNAME GAMES_PLAYED, BEST_GAME
@@ -25,11 +27,44 @@ MAIN(){
 #GET_INFO_FROM_DATABASE(){}
 
 PLAY(){
-  if [[ $1 =~ ^[0-9]+$ ]]
+  if [[ $1 == "It's lower than that, guess again:" ]]
   then
-  echo PPPP
-  else
-    echo That is not an integer, guess again:
+    echo $1
+  elif [[ $1 == "It's higher than that, guess again:" ]]
+  then
+    echo bunda
   fi
 }
+
+GAME(){
+  ##GAME
+  if [[ $2 ]]
+  then
+    echo Guess the secret number between 1 and 1000:
+  fi
+  read player_guess
+
+  if [[ ! $player_guess =~ ^[0-9]+$ ]]
+  then
+    echo That is not an integer, guess again:
+    GAME "Again"
+  else
+    if [[ $player_guess > $GUESS_NUMBER ]]
+    then
+      echo "It's lower than that, guess again:"
+      ((plays_count++))
+      GAME
+    elif [[ $player_guess < $GUESS_NUMBER ]]
+    then
+      echo "It's higher than that, guess again:"
+      ((plays_count++))
+      GAME
+    else
+      echo You guessed it in $plays_count tries. The secret number was $GUESS_NUMBER. Nice job!
+      ((plays_count++))
+    fi
+
+  fi
+}
+plays_count=0
 MAIN
